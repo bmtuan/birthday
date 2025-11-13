@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Happy Birthday My Love</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.88);
+            padding: 30px 25px;
+            border-radius: 20px;
+            width: 430px;
+            max-width: 90vw;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 10;
+        }
+
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 10px 25px rgba(255, 120, 160, 0.6);
+            border: 4px solid #ff7fa7;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            margin-bottom: 10px;
+            color: #c0245e;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #e03a72;
+        }
+
+        p {
+            margin: 0;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* Chữ bay loạn xạ */
+        .crazy-text {
+            position: fixed;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 40, 100, 1);
+            pointer-events: none;
+            white-space: nowrap;
+            opacity: 0;
+            animation: crazyMove 3.2s linear forwards;
+        }
+
+        @keyframes crazyMove {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(calc(var(--dx)*1.4), calc(var(--dy)*1.4)) rotate(var(--rot2)) scale(0.6);
+            }
+        }
+
+        /* Nút bật nhạc */
+        .music-btn {
+            margin-top: 18px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: #ff7fa7;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(255, 120, 160, 0.6);
+            transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+        }
+
+        .music-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(255, 120, 160, 0.7);
+            background: #ff5f93;
+        }
+
+        .music-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(255, 120, 160, 0.5);
+        }
+
+        /* Ẩn audio */
+        audio {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1rem;
+            }
+
+            .avatar {
+                width: 110px;
+                height: 110px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NHẠC MP3 -->
+    <audio id="bg-music" autoplay loop>
+        <source src="music.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="card">
+        <img src="image.jpg" class="avatar" alt="Birthday girl">
+
+        <h1>Happy Birthday, My Love 🎂</h1>
+        <h2>Chúc em một ngày thật ngọt ngào 💗</h2>
+
+        <p>
+            Em là điều tuyệt vời nhất xảy ra trong cuộc đời anh.<br>
+            Chúc em tuổi mới luôn hạnh phúc, xinh đẹp và tràn đầy tình yêu. ❤️
+        </p>
+
+        <button id="music-btn" class="music-btn" style="display:none;">
+            ▶ Bật nhạc cho em nè 🎵
+        </button>
+    </div>
+
+    <script>
+        // Danh sách lời chúc
+        const wishes = [
+            "Anh yêu em! ❤️",
+            "Chúc em luôn xinh đẹp 💕",
+            "Hạnh phúc nhé công chúa! 👑",
+            "Cười nhiều lên nha 😘",
+            "Em là cả thế giới của anh 🌍",
+            "Sinh nhật vui vẻ! 🎂",
+            "Mãi bên nhau 💑",
+            "Em tuyệt nhất! ✨",
+            "Mãi yêu em 💗",
+        ];
+
+        const MAX_TEXTS = 25; // giới hạn chữ bay cùng lúc
+
+        function createCrazyText() {
+            const currentTexts = document.querySelectorAll(".crazy-text").length;
+            if (currentTexts >= MAX_TEXTS) return;
+
+            const text = document.createElement("div");
+            text.className = "crazy-text";
+            text.innerText = wishes[Math.floor(Math.random() * wishes.length)];
+
+            // Vị trí ngẫu nhiên
+            text.style.left = Math.random() * 90 + "vw";
+            text.style.top = Math.random() * 90 + "vh";
+
+            // Vector bay ngẫu nhiên
+            const dx = (Math.random() * 400 - 200) + "px";
+            const dy = (Math.random() * 400 - 200) + "px";
+            const rot = (Math.random() * 360) + "deg";
+            const rot2 = (Math.random() * 360) + "deg";
+
+            text.style.setProperty("--dx", dx);
+            text.style.setProperty("--dy", dy);
+            text.style.setProperty("--rot", rot);
+            text.style.setProperty("--rot2", rot2);
+
+            // Kích thước random
+            text.style.fontSize = (1 + Math.random() * 0.7) + "rem";
+
+            document.body.appendChild(text);
+
+            setTimeout(() => text.remove(), 3200);
+        }
+
+        // Liên tục tạo chữ bay (giảm tần suất để đỡ lag)
+        setInterval(createCrazyText, 850);
+
+        // Xử lý nhạc bị chặn autoplay
+        const audio = document.getElementById("bg-music");
+        const musicBtn = document.getElementById("music-btn");
+
+        function tryPlayAudio() {
+            audio.play().then(() => {
+                // Nếu phát được thì ẩn nút
+                musicBtn.style.display = "none";
+            }).catch(() => {
+                // Nếu bị chặn, hiện nút
+                musicBtn.style.display = "inline-block";
+            });
+        }
+
+        // Thử phát nhạc khi load
+        window.addEventListener("load", () => {
+            tryPlayAudio();
+        });
+
+        // Nếu bị chặn, người dùng bấm nút
+        musicBtn.addEventListener("click", () => {
+            audio.play();
+            musicBtn.style.display = "none";
+        });
+
+        // Phòng khi user click đâu đó trên màn hình, ta cũng thử phát lại nhạc
+        document.addEventListener("click", () => {
+            if (audio.paused) {
+                tryPlayAudio();
+            }
+        }, { once: true });
+    </script>
+
+</body>
+
+</html>
